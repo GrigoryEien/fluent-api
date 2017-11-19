@@ -1,12 +1,35 @@
 using System;
+using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace ObjectPrinting
 {
     public class PrintingConfig<TOwner>
     {
-        public string PrintToString(TOwner obj)
+	    public PrintingConfig<TOwner> ExcludeType<TType>()
+	    {
+			    return this;
+	    }
+
+	    public SerializeConfig<TOwner, TType> Printing<TType>()
+	    {
+		    return new SerializeConfig<TOwner,TType>(this);
+	    }
+
+		public PrintingConfig<TOwner> SetCultureForNumericData(CultureInfo culture)
+	    {
+		    return this;
+	    }
+
+	    public SerializeConfig<TOwner, TProperty> Printing<TProperty>(
+		    Func<TOwner, TProperty> propetySelector)
+	    {
+		    return new SerializeConfig<TOwner, TProperty>(this);
+	    }
+
+		public string PrintToString(TOwner obj)
         {
             return PrintToString(obj, 0);
         }
@@ -37,5 +60,11 @@ namespace ObjectPrinting
             }
             return sb.ToString();
         }
+
+	    public PrintingConfig<TOwner> ExcludeProperty<TProperty>(Expression<Func<TOwner, TProperty>> func)
+	    {
+			// ...
+		    return this;
+	    }
     }
 }
