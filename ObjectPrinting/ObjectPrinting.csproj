@@ -61,6 +61,7 @@
     <Compile Include="SerializeConfig.cs" />
     <Compile Include="SerializeConfigExtensions.cs" />
     <Compile Include="Tests\ObjectPrinterAcceptanceTests.cs" />
+    <Compile Include="Tests\ObjectPrinter_should.cs" />
     <Compile Include="Tests\Person.cs" />
   </ItemGroup>
   <ItemGroup>

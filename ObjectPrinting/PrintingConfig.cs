@@ -12,10 +12,9 @@ namespace ObjectPrinting
 {
     public class PrintingConfig<TOwner>
     {
-        private List<Type> excludedTypes = new List<Type>();
+        private readonly List<Type> excludedTypes = new List<Type>();
         public Dictionary<Type, Delegate> speciallySerializedTypes = new Dictionary<Type, Delegate>();
-
-        private HashSet<string> ExcludedProperties = new HashSet<string>();
+        private readonly HashSet<string> excludedProperties = new HashSet<string>();
 
 
         public PrintingConfig<TOwner> ExcludeProperty<TProperty>(Expression<Func<TOwner, TProperty>> selector)
@@ -24,7 +23,7 @@ namespace ObjectPrinting
             var member = (selector.Body as MemberExpression).ToString();
             var dotIndex = member.IndexOf('.');
             member = member.Substring(dotIndex);
-            ExcludedProperties.Add(className + member);
+            excludedProperties.Add(className + member);
             return this;
         }
 
@@ -37,11 +36,6 @@ namespace ObjectPrinting
         public SerializeConfig<TOwner, TType> Printing<TType>()
         {
             return new SerializeConfig<TOwner, TType>(this);
-        }
-
-        public PrintingConfig<TOwner> SetCultureForNumericData(CultureInfo culture)
-        {
-            return this;
         }
 
         public SerializeConfig<TOwner, TProperty> Printing<TProperty>(
@@ -57,7 +51,6 @@ namespace ObjectPrinting
 
         private string PrintToString(object obj, int nestingLevel)
         {
-            //TODO apply configurations
             if (obj == null)
                 return "null" + Environment.NewLine;
 
@@ -79,7 +72,7 @@ namespace ObjectPrinting
 
                 if (excludedTypes.Contains(propertyInfo.PropertyType))
                     continue;
-                if (ExcludedProperties.Contains(propertyPath))
+                if (excludedProperties.Contains(propertyPath))
                     continue;
                 if (speciallySerializedTypes.ContainsKey(propertyInfo.PropertyType))
                     sb.Append(identation + propertyInfo.Name + " = " +

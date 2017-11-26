@@ -8,7 +8,7 @@ namespace ObjectPrinting.Tests
     public class ObjectPrinter_should
     {
         [TestFixture]
-        public class ObjectPrinter_should_Should
+        public class ObjectPrinter_Should_Should
         {
             [Test]
             public void IgnoreExcludedType()
