@@ -13,7 +13,7 @@ namespace ObjectPrinting
 
 		public PrintingConfig<TOwner> Using(Func<TType, string> serializer)
 		{
-			// ...
+			printingConfig.speciallySerializedTypes[typeof(TType)] = serializer;
 			return printingConfig;
 		}
 
