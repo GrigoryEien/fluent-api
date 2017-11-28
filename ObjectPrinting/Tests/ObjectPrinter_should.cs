@@ -9,7 +9,7 @@ namespace ObjectPrinting.Tests
     public class ObjectPrinter_should
     {
         [TestFixture]
-        public class ObjectPrinter_Should_Should
+        public class ObjectPrinter_Should
         {
             private Person person;
             private PrintingConfig<Person> printer;
