@@ -25,7 +25,7 @@ namespace ObjectPrinting.Tests
             public void IgnoreExcludedType()
             {
                 printer.ExcludeType<int>();
-                var expected = String.Format("Person{0}	Id = Guid{0}	Name = Alex{0}	Height = 0{0}",
+                var expected = string.Format("Person{0}	Id = Guid{0}	Name = Alex{0}	Height = 0{0}",
                     Environment.NewLine);
                 var actual = printer.PrintToString(person);
                 actual.Should().Be(expected);
@@ -35,7 +35,7 @@ namespace ObjectPrinting.Tests
             public void UseCustomSerializationForType()
             {
                 printer.Printing<int>().Using(x => (2 * x).ToString());
-                var expected = String.Format("Person{0}	Id = Guid{0}	Name = Alex{0}	Height = 0{0}	Age = 38{0}",
+                var expected = string.Format("Person{0}	Id = Guid{0}	Name = Alex{0}	Height = 0{0}	Age = 38{0}",
                     Environment.NewLine);
                 var actual = printer.PrintToString(person);
                 actual.Should().Be(expected);
@@ -45,7 +45,7 @@ namespace ObjectPrinting.Tests
             public void UseCustomSerializationForProperty()
             {
                 printer.Printing(x => x.Age).Using(x => (3 * x).ToString());
-                var expected = String.Format("Person{0}	Id = Guid{0}	Name = Alex{0}	Height = 0{0}	Age = 57{0}",
+                var expected = string.Format("Person{0}	Id = Guid{0}	Name = Alex{0}	Height = 0{0}	Age = 57{0}",
                     Environment.NewLine);
                 var actual = printer.PrintToString(person);
                 actual.Should().Be(expected);
@@ -55,7 +55,7 @@ namespace ObjectPrinting.Tests
             public void IgnoreExcludedProperty()
             {
                 printer.ExcludeProperty(x => x.Id);
-                var expected = String.Format("Person{0}	Name = Alex{0}	Height = 0{0}	Age = 19{0}", Environment.NewLine);
+                var expected = string.Format("Person{0}	Name = Alex{0}	Height = 0{0}	Age = 19{0}", Environment.NewLine);
                 var actual = printer.PrintToString(person);
                 actual.Should().Be(expected);
             }
@@ -64,7 +64,7 @@ namespace ObjectPrinting.Tests
             public void SerializeIntWithCulture()
             {
                 printer.Printing<int>().UsingCulture(new CultureInfo("ru-RU"));
-                var expected = String.Format("Person{0}	Name = Alex{0}	Height = 0{0}	Age = {1}{0}", Environment.NewLine,
+                var expected = string.Format("Person{0}	Name = Alex{0}	Height = 0{0}	Age = {1}{0}", Environment.NewLine,
                     (19).ToString(new CultureInfo("ru-RU")));
 
                 var actual = printer.PrintToString(person);
@@ -74,7 +74,7 @@ namespace ObjectPrinting.Tests
             public void SerializeDoubleWithCulture()
             {
                 printer.Printing<double>().UsingCulture(new CultureInfo("ru-RU"));
-                var expected = String.Format("Person{0}	Name = Alex{0}	Height = {1}{0}	Age = 19{0}",
+                var expected = string.Format("Person{0}	Name = Alex{0}	Height = {1}{0}	Age = 19{0}",
                     Environment.NewLine,
                     (0).ToString(new CultureInfo("ru-RU")));
                 var actual = printer.PrintToString(person);
@@ -84,7 +84,7 @@ namespace ObjectPrinting.Tests
             public void ShouldSupportStringLenghtRestriction()
             {
                 printer.Printing<string>().LengthRestrictionTo(2);
-                var expected = String.Format("Person{0}	Id = Guid{0}	Name = Al{0}	Height = 0{0}	Age = 19{0}",
+                var expected = string.Format("Person{0}	Id = Guid{0}	Name = Al{0}	Height = 0{0}	Age = 19{0}",
                     Environment.NewLine);
                 var actual = printer.PrintToString(person);
                 actual.Should().Be(expected);
@@ -97,10 +97,11 @@ namespace ObjectPrinting.Tests
                 var parent = new NestedObject(child, 15, 5.7, 11, "EvenLongestRandomName");
 
                 var nestedPrinter = new PrintingConfig<NestedObject>();
-                var expected = String.Format(
-                    "NestedObject{0}	Child = NestedObject{0}		Child = null{0}		Id = 13{0}		Weight = 2.5{0}		Height = 9{0}		Name = LongRandomName{0}	" +
-                    "Id = 15{0}	Weight = 5.7{0}	Height = 11{0}	Name = EvenLongestRandomName{0}",
-                    Environment.NewLine);
+                var expected = string.Format(
+                    "NestedObject{0}	Child = NestedObject{0}		Child = null{0}		Id = 13{0}		Weight = {1}{0}		Height = 9{0}		Name = LongRandomName{0}	" +
+                    "Id = 15{0}	Weight = {2}{0}	Height = 11{0}	Name = EvenLongestRandomName{0}",
+                    Environment.NewLine, (2.5).ToString(CultureInfo.CurrentCulture),
+                    (5.7).ToString(CultureInfo.CurrentCulture));
                 var actual = nestedPrinter.PrintToString(parent);
 
                 actual.Should().Be(expected);
@@ -109,17 +110,17 @@ namespace ObjectPrinting.Tests
             [Test]
             public void ExtensionMethodShouldAllowDefaultPrining()
             {
-                var expected = String.Format("Person{0}	Id = Guid{0}	Name = Alex{0}	Height = 0{0}	Age = 19{0}",
+                var expected = string.Format("Person{0}	Id = Guid{0}	Name = Alex{0}	Height = 0{0}	Age = 19{0}",
                     Environment.NewLine);
                 var actual = person.PrintToString();
 
                 actual.Should().Be(expected);
             }
-            
+
             [Test]
             public void ExtensionMethodShouldAllowCustomization()
             {
-                var expected = String.Format("Person{0}	Id = Guid{0}	Name = Alex{0}	Height = 0{0}",
+                var expected = string.Format("Person{0}	Id = Guid{0}	Name = Alex{0}	Height = 0{0}",
                     Environment.NewLine);
                 var actual = person.PrintToString(s => s.ExcludeType<int>());
 
