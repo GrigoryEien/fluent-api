@@ -81,7 +81,7 @@ namespace ObjectPrinting.Tests
             }
 
             [Test]
-            public void CutStringWhenSerializing()
+            public void ShouldSupportStringLenghtRestriction()
             {
                 printer.Printing<string>().LengthRestrictionTo(2);
                 var expected = String.Format("Person{0}	Id = Guid{0}	Name = Al{0}	Height = 0{0}	Age = 19{0}",
@@ -102,6 +102,26 @@ namespace ObjectPrinting.Tests
                     "Id = 15{0}	Weight = 5.7{0}	Height = 11{0}	Name = EvenLongestRandomName{0}",
                     Environment.NewLine);
                 var actual = nestedPrinter.PrintToString(parent);
+
+                actual.Should().Be(expected);
+            }
+
+            [Test]
+            public void ExtensionMethodShouldAllowDefaultPrining()
+            {
+                var expected = String.Format("Person{0}	Id = Guid{0}	Name = Alex{0}	Height = 0{0}	Age = 19{0}",
+                    Environment.NewLine);
+                var actual = person.PrintToString();
+
+                actual.Should().Be(expected);
+            }
+            
+            [Test]
+            public void ExtensionMethodShouldAllowCustomization()
+            {
+                var expected = String.Format("Person{0}	Id = Guid{0}	Name = Alex{0}	Height = 0{0}",
+                    Environment.NewLine);
+                var actual = person.PrintToString(s => s.ExcludeType<int>());
 
                 actual.Should().Be(expected);
             }
