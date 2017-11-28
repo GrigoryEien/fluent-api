@@ -12,10 +12,15 @@ namespace ObjectPrinting
 {
     public class PrintingConfig<TOwner>
     {
-        private readonly List<Type> excludedTypes = new List<Type>();
+        private readonly HashSet<Type> excludedTypes = new HashSet<Type>();
         public Dictionary<Type, Delegate> speciallySerializedTypes = new Dictionary<Type, Delegate>();
         private readonly HashSet<string> excludedProperties = new HashSet<string>();
 
+        private static Type[] finalTypes = new[]
+        {
+            typeof(int), typeof(double), typeof(float), typeof(string),
+            typeof(DateTime), typeof(TimeSpan)
+        };
 
         public PrintingConfig<TOwner> ExcludeProperty<TProperty>(Expression<Func<TOwner, TProperty>> selector)
         {
@@ -54,11 +59,7 @@ namespace ObjectPrinting
             if (obj == null)
                 return "null" + Environment.NewLine;
 
-            var finalTypes = new[]
-            {
-                typeof(int), typeof(double), typeof(float), typeof(string),
-                typeof(DateTime), typeof(TimeSpan)
-            };
+
             if (finalTypes.Contains(obj.GetType()))
                 return obj + Environment.NewLine;
 
@@ -75,9 +76,9 @@ namespace ObjectPrinting
                 if (excludedProperties.Contains(propertyPath))
                     continue;
                 if (speciallySerializedTypes.ContainsKey(propertyInfo.PropertyType))
-                    sb.Append(identation + propertyInfo.Name + " = " +
+                    sb.AppendLine(identation + propertyInfo.Name + " = " +
                               speciallySerializedTypes[propertyInfo.PropertyType]
-                                  .DynamicInvoke(propertyInfo.GetValue(obj)) + Environment.NewLine);
+                                  .DynamicInvoke(propertyInfo.GetValue(obj)));
                 else
                     sb.Append(identation + propertyInfo.Name + " = " +
                               PrintToString(propertyInfo.GetValue(obj),

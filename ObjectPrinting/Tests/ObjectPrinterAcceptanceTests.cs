@@ -22,7 +22,7 @@ namespace ObjectPrinting.Tests
             //4. Настроить сериализацию конкретного свойства
             printer.Printing(x => x.Age).Using(x => "5");
             //5. Настроить обрезание строковых свойств (метод должен быть виден только для строковых свойств)
-            printer.Printing<string>().Using(10);
+            printer.Printing<string>().LengthRestrictionTo(10);
             //6. Исключить из сериализации конкретного свойства
             printer.ExcludeProperty(x => x.Age);
 

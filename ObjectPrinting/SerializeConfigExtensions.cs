@@ -40,7 +40,7 @@ namespace ObjectPrinting
 			return ((ISerializeConfig<TOwner, BigInteger>)config).PrintingConfig;
 		}
 
-		public static PrintingConfig<TOwner> Using<TOwner>(this SerializeConfig<TOwner, string> config,
+		public static PrintingConfig<TOwner> LengthRestrictionTo<TOwner>(this SerializeConfig<TOwner, string> config,
 			int lenght)
 		{
 			var printingConfig = ((ISerializeConfig<TOwner, string>) config).PrintingConfig;
